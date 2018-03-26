@@ -62,3 +62,21 @@ func (p *Pool) Release(r io.Closer) {
 	}
 }
 
+func (p *Pool) Close() {
+	p.m.Lock()
+	defer p.m.Unlock()
+
+	if p.closed {
+		return
+	}
+
+	p.closed = true
+
+	// Close the channel before we drain the channel of its
+	// resources. If we don't do this, we will have a deadlock.
+	close(p.resources)
+
+	for r := range p.resources {
+		r.Close()
+	}
+}
