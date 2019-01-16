@@ -5,7 +5,7 @@ import (
 	"sync"
 )
 
-// Worker must be implemented by tpyes that want to use
+// Worker must be implemented by types that want to use
 // the work pool.
 type Worker interface {
 	Task()
